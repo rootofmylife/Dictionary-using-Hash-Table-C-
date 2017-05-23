@@ -63,8 +63,8 @@ public:
         long sum = 0;
         long len = key.length();
         for(int i = 0; i < len; i++){
-            sum += (int)key[i] * pow(128 * 1.0, len * 1.0);
-            sum += sum % TABLE_SIZE;
+            long temp = (int)key[i] * pow(128 * 1.0, len * 1.0);
+            sum += temp % TABLE_SIZE;
             len--;
         }
         return sum;
@@ -104,25 +104,34 @@ public:
 
 int main()
 {
-    ifstream file("dic.dat", ios_base::in);
-    string str;
-    getline(file, str);
+    Hashmap a;
+    ifstream file("test.dat", ios_base::in);
+    while(!file.eof()) {
+        string str;
+        getline(file, str);
 
-    string key = "", val = "";
-    int vt = -1;
-    for(unsigned int i = 0; i < str.length(); i++) {
-        if(str[i] == ':'){
-            vt = i + 1;
-            break;
+        string key = "", val = "";
+        int vt = -1;
+        for(unsigned int i = 0; i < str.length(); i++) {
+            if(str[i] == ':'){
+                vt = i + 1;
+                break;
+            }
+            key += str[i];
         }
-        key += str[i];
+
+        for(unsigned int i = vt; i < str.length(); i++){
+            val += str[i];
+        }
+        a.Insert(key, val);
     }
 
-    for(unsigned int i = vt; i < str.length(); i++){
-        val += str[i];
-    }
+    string sea;
+    cout << "Find word(s): ";
+    getline(cin, sea);
+    cout << a.Search(sea);
 
-    cout << key << endl << val;
+    file.close();
 
     return 0;
 }
